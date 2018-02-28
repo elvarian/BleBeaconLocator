@@ -120,7 +120,8 @@ namespace BleBeaconServer.DataClasses
                 if(data.Length > 13)
                 {
                     beaconData = new BeaconData();
-                    beaconData.mac = string.Format("{0:X2}:{1:X2}:{2:X2}:{3:X2}:{4:X2}:{5:X2}", data[12], data[11], data[10], data[9], data[8], data[7]);
+                    //beaconData.mac = string.Format("{0:X2}:{1:X2}:{2:X2}:{3:X2}:{4:X2}:{5:X2}", data[12], data[11], data[10], data[9], data[8], data[7]);
+                    beaconData.mac = data[12].ToString("X2") + ":" + data[11].ToString("X2")+ ":" + data[10].ToString("X2")+ ":" + data[9].ToString("X2") + ":" + data[8].ToString("X2")+ ":" + data[7].ToString("X2");
                     beaconData.rssi = data[data.Length -1];
                 }
             }
