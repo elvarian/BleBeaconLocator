@@ -106,6 +106,9 @@ namespace BleBeaconServer
                 debugListener = new TextWriterTraceListener(Console.Out);
                 debugListener.Filter = new SourceFilter("debug");
                 System.Diagnostics.Trace.Listeners.Add(debugListener);
+
+                Debug.WriteLine("Testing debug listener 1");
+                Trace.WriteLine("Testing debug listener 2");
             }
 
             Console.WriteLine("Using port " + port);
