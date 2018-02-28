@@ -54,6 +54,13 @@ namespace BleBeaconServer.DataClasses
             set { beacon = value; }
         }
 
+        private BleNode node;
+        public BleNode Node
+        {
+            get { return node; }
+            set { node = value; }
+        }
+
         /*
         public BeaconData(byte[] data)
         {
@@ -122,7 +129,15 @@ namespace BleBeaconServer.DataClasses
                     beaconData = new BeaconData();
                     //beaconData.mac = string.Format("{0:X2}:{1:X2}:{2:X2}:{3:X2}:{4:X2}:{5:X2}", data[12], data[11], data[10], data[9], data[8], data[7]);
                     beaconData.mac = data[12].ToString("X2") + ":" + data[11].ToString("X2")+ ":" + data[10].ToString("X2")+ ":" + data[9].ToString("X2") + ":" + data[8].ToString("X2")+ ":" + data[7].ToString("X2");
-                    beaconData.rssi = data[data.Length -1];
+
+                    byte rssiByte = data[data.Length - 1];
+                    if (rssiByte > 0x80)
+                        beaconData.rssi = -(rssiByte & 0x7F);
+                    else
+                        beaconData.rssi = rssiByte;
+                    
+                    //beaconData.rssi = Convert.ToInt32(data[data.Length - 1]);
+                    //aconData.rssi = rssiValue;
                 }
             }
             return beaconData;

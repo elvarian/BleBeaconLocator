@@ -362,6 +362,7 @@ namespace BleBeaconServer.DataClasses
                     else
                     {
                         beaconData.Beacon = beacon;
+                        beaconData.Node = node;
                     }
                 }
             }

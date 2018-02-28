@@ -78,7 +78,12 @@ namespace BleBeaconServer.DataClasses.Parsers
                             {
                                 ruuviData = new RuuvitagData(beaconData);
                                 double humidity = dataBytes[1] * 0.5;
-                                sbyte temperature = Convert.ToSByte(dataBytes[2]);
+                                //sbyte temperature = Convert.ToSByte(dataBytes[2]);
+                                sbyte temperature = 0;
+                                if (dataBytes[2] > 0x80)
+                                    temperature = (sbyte)(-(dataBytes[2] & 0x7F));
+                                else
+                                    temperature = (sbyte)dataBytes[2];
                                 UInt16 pressureValue = BitConverter.ToUInt16(new byte[] { dataBytes[5], dataBytes[4] }, 0);
                                 int pressure = pressureValue + 50000;
 

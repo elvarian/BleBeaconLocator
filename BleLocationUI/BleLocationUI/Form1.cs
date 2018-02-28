@@ -146,5 +146,37 @@ namespace BleLocationUI
             g.DrawEllipse(pen, x - radius, y - radius, radius + radius, radius + radius);
             g.FillEllipse(brush, x - radius, y - radius, radius + radius, radius + radius);
         }
+
+        private void beaconsComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (beaconsComboBox.SelectedItem != null && beaconsComboBox.SelectedItem is BleBeacon)
+            {
+                nodeListTimer.Enabled = true;
+                nodeListTimer.Start();
+            }
+        }
+
+        private void updateNodesListView(BleBeacon beacon)
+        {
+            nodesListView.Items.Clear();
+            List<BleDistance> beaconDistances = distances.FindAll(d => d.BleBeaconsId == beacon.BleBeaconsId);
+            foreach(BleDistance distance in beaconDistances)
+            {
+                BleNode node = nodes.Find(n => n.BleNodesId == distance.BleNodesId);
+                ListViewItem lvi = new ListViewItem(node.Sender);
+                lvi.SubItems.Add(distance.Distance.ToString("F2"));
+                nodesListView.Items.Add(lvi);
+            }
+            
+        }
+
+        private void nodeListTimer_Tick(object sender, EventArgs e)
+        {
+            if(beaconsComboBox.SelectedItem != null && beaconsComboBox.SelectedItem is BleBeacon)
+            {
+                BleBeacon beacon = (BleBeacon)beaconsComboBox.SelectedItem;
+                updateNodesListView(beacon);
+            }
+        }
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -25,6 +26,8 @@ namespace BleLocationUI
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             //string dir = Directory.GetCurrentDirectory();
+
+            string currentDir = Directory.GetCurrentDirectory();
 
             ConfigurationBuilder builder = new ConfigurationBuilder();
             builder.SetBasePath(Directory.GetCurrentDirectory());
