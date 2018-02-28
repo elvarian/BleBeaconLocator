@@ -177,7 +177,8 @@ namespace BleBeaconServer.DataClasses
         {
             while(!shouldStop)
             {
-                foreach(string mac in distances.Keys)
+                Dictionary<string, Dictionary<BleNode, double>> copyOfDistances = CopyOfDistances;
+                foreach (string mac in copyOfDistances.Keys)
                 {
                     List<BleNode> nodeList = new List<BleNode>();
                     List<double> distList = new List<double>();
