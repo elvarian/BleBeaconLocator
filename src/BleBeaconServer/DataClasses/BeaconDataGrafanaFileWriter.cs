@@ -63,12 +63,10 @@ namespace BleBeaconServer.DataClasses
                             }
                             else
                             {
-                                string name = "";
+                                string name = data.Mac;
                                 if (data.Beacon != null && data.Beacon.Name != null)
                                     name = data.Beacon.Name;
-
-
-
+                                
                                 if (data is RuuvitagData)
                                 {
                                     RuuvitagData ruuviData = (RuuvitagData)data;
