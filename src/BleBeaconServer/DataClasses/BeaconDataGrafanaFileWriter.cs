@@ -43,13 +43,13 @@ namespace BleBeaconServer.DataClasses
                     }
                 }
 
-                string newFile = filename + ".new";
+                string tempFile = filename + ".temp";
 
 
                 try
                 {
                     using (System.IO.StreamWriter file =
-                    new System.IO.StreamWriter(newFile, false))
+                    new System.IO.StreamWriter(tempFile, false))
                     {
                         foreach (BeaconData data in beaconDataCopy.Values)
                         {
@@ -90,7 +90,8 @@ namespace BleBeaconServer.DataClasses
                     }
 
 
-                    File.Copy(newFile, filename, true);
+                    File.Copy(tempFile, filename, true);
+                    File.Delete(tempFile);
 
                 } catch(Exception ex)
                 {
