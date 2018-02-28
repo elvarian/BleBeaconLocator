@@ -107,7 +107,18 @@ namespace BleBeaconServer
                 debugListener.Filter = new SourceFilter("debug");
                 System.Diagnostics.Trace.Listeners.Add(debugListener);
             }
+
+            Console.WriteLine("Using port " + port);
+            if (filename != null)
+            {
+                Console.WriteLine("Starting grafana filewriter with file '" + filename + "'");
+            }
+            if (noConsole)
+                Console.WriteLine("Selected no console");
+            if (debug)
+                Console.WriteLine("Printing out debug information");
             
+
             packetHandler = new BeaconPacketHandler();
 
             BeaconPacketHandler.BeaconDataReceived += BeaconPacketHandler_BeaconDataReceived;
