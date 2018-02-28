@@ -11,5 +11,4 @@ src/BleBeaconServer/bin/
 src/BleBeaconServer/Migrations/
 Trilateration/
 src/BleBeaconServer/obj/
-src/BleBeaconServer/appsettings.json
 .vs/
