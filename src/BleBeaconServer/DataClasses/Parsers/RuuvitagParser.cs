@@ -89,19 +89,19 @@ namespace BleBeaconServer.DataClasses.Parsers
                         }
                         else
                         {
-                            Debug.WriteLine("[ruuvitagparser] data format not supported. Format: " + dataBytes[0].ToString());
+                            Trace.WriteLine("[ruuvitagparser] data format not supported. Format: " + dataBytes[0].ToString());
                         }
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine("[ruuvitagparser] data: ");
+                        Trace.WriteLine("[ruuvitagparser] data: ");
                         foreach(byte b in data)
                         {
-                            Debug.Write(string.Format("{0:X} ", b));
+                            Trace.Write(string.Format("{0:X} ", b));
                         }
-                        Debug.Write("\r\n");
-                        Debug.WriteLine("[ruuvitagparser] EddisonUrlLength: " + eddisonUrlLength.ToString() + ", base64Str: " + base64Str);
-                        Debug.WriteLine("[ruuvitagparser] Exception caught: " + ex.Message);
+                        Trace.Write("\r\n");
+                        Trace.WriteLine("[ruuvitagparser] EddisonUrlLength: " + eddisonUrlLength.ToString() + ", base64Str: " + base64Str);
+                        Trace.WriteLine("[ruuvitagparser] Exception caught: " + ex.Message);
                     }
                 }
 

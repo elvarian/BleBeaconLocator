@@ -93,7 +93,7 @@ namespace BleBeaconServer.DataClasses
 
                 } catch(Exception ex)
                 {
-                    Debug.WriteLine("[beacondatagrafanafukewriter] Exception caugth: " + ex.Message);
+                    Trace.WriteLine("[beacondatagrafanafukewriter] Exception caugth: " + ex.Message);
                 }
                 for(int i = 0; i < 60; i++)
                 {

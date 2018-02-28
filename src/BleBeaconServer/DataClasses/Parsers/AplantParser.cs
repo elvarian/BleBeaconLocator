@@ -59,7 +59,7 @@ namespace BleBeaconServer.DataClasses.Parsers
                         aplantData.SoilMoisture = data[data.Length - 4];
                     }catch(Exception ex)
                     {
-                        Debug.WriteLine("[aplantparser] Exception caugth: " + ex.Message);
+                        Trace.WriteLine("[aplantparser] Exception caugth: " + ex.Message);
                     }
                 }
             }

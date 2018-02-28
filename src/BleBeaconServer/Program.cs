@@ -106,9 +106,9 @@ namespace BleBeaconServer
                 debugListener = new TextWriterTraceListener(Console.Out);
                 debugListener.Filter = new SourceFilter("debug");
                 System.Diagnostics.Trace.Listeners.Add(debugListener);
-
-                Debug.WriteLine("Testing debug listener 1");
-                Trace.WriteLine("Testing debug listener 2");
+                
+                //Trace.WriteLine("Testing debug listener 1");
+                //Trace.WriteLine("Testing debug listener 2");
             }
 
             Console.WriteLine("Using port " + port);
@@ -139,14 +139,14 @@ namespace BleBeaconServer
 
                 if (closing)
                 {
-                    Debug.WriteLine("Closing down...");
+                    Trace.WriteLine("Closing down...");
                     
                     break;
                 }
                 else
                 {
                     Thread.Sleep(1000);
-                    Debug.WriteLine("Sleeping " + 1 + " seconds... ");
+                    Trace.WriteLine("Sleeping " + 1 + " seconds... ");
                     continue;
                 }
             }

@@ -63,7 +63,7 @@ namespace BleBeaconServer.DataClasses.Parsers
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine("[pebblebeeparser] Exception caugth: " + ex.Message);
+                        Trace.WriteLine("[pebblebeeparser] Exception caugth: " + ex.Message);
                     }
                 }
             }
