@@ -146,7 +146,7 @@ namespace BleBeaconServer
                 else
                 {
                     Thread.Sleep(1000);
-                    Trace.WriteLine("Sleeping " + 1 + " seconds... ");
+                    //Trace.WriteLine("Sleeping " + 1 + " seconds... ");
                     continue;
                 }
             }
