@@ -89,7 +89,8 @@ namespace BleBeaconServer.DataClasses
                         }
                     }
 
-                    File.Move(newFile, filename);
+
+                    File.Copy(newFile, filename, true);
 
                 } catch(Exception ex)
                 {
