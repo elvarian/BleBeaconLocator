@@ -339,9 +339,10 @@ namespace BleBeaconServer.DataClasses
             }
             
             Types type = BeaconData.GetType(packet.ByteData);
+            
             BeaconData beaconData = BeaconData.ParseValues(packet.ByteData);
 
-            if (beaconData != null)
+            if (beaconData != null && type != Types.Unknown)
             {
                 if (beaconData.Mac != null && beaconData.Mac != "")
                 {
