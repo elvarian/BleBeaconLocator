@@ -500,16 +500,11 @@ namespace BleBeaconServer.DataClasses
 
         }
 
-        private void AddToNodeMap(BleNode node, object obj)
+        private void AddToNodeMap(BleNode node, BeaconData data)
         {
-            string mac = null;
-            double rssi = 0;
-            if (obj != null && obj is RuuvitagData)
-            {
-                RuuvitagData ruuviData = (RuuvitagData)obj;
-                mac = ruuviData.Mac;
-                rssi = ruuviData.Rssi;
-            }
+            string mac = data.Mac;
+            double rssi = data.Rssi;
+            
             //Dictionary<BleNode, RollingList<int>> nodeMap;
             Dictionary<BleNode, FilterContainer> nodeMap;
             if (mac != null && rssi != 0)
