@@ -1,4 +1,5 @@
 ﻿using BleBeaconDBLib;
+using BleBeaconServer.DataClasses.Parsers;
 using BleBeaconServer.DbEntities;
 using System;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.Drawing;
 using System.Numerics;
 using System.Text;
 using System.Threading;
+using static BleBeaconServer.DataClasses.BeaconData;
 
 namespace BleBeaconServer.DataClasses
 {
@@ -13,7 +15,10 @@ namespace BleBeaconServer.DataClasses
     {
         int txPower = -58; //hard coded
         double alfa = 0.75;
-        
+
+        public delegate void BeaconEvent(BeaconData data);
+        public static event BeaconEvent BeaconDataReceived;
+
         Dictionary<string, Dictionary<BleNode, FilterContainer>> beaconMap = new Dictionary<string, Dictionary<BleNode, FilterContainer>>();
 
         Dictionary<string, Dictionary<BleNode, double>> distances = new Dictionary<string, Dictionary<BleNode, double>>();
@@ -257,9 +262,6 @@ namespace BleBeaconServer.DataClasses
 
                                 db.SaveChanges();
                             }
-
-                            
-
                             
                             using (BleBeaconServerContext db = new BleBeaconServerContext())
                             {
@@ -319,12 +321,12 @@ namespace BleBeaconServer.DataClasses
         public void AddPacket(BeaconPacket packet)
         {
             
-            BleNode node = nodes.Find(n => n.Sender == packet.sender);
+            BleNode node = nodes.Find(n => n.Sender == packet.Sender);
 
             if (node == null)
             {
                 node = new BleNode();
-                node.Sender = packet.sender;
+                node.Sender = packet.Sender;
                 node.MapsId = map.MapsId;
                 nodes.Add(node);
 
@@ -334,8 +336,73 @@ namespace BleBeaconServer.DataClasses
                     db.SaveChanges();
                 }
             }
+            
+            Types type = BeaconData.GetType(packet.ByteData);
+            BeaconData beaconData = BeaconData.ParseValues(packet.ByteData);
 
-            if(packet.mac_address != null && packet.mac_address != "")
+            if (beaconData != null)
+            {
+                if (beaconData.Mac != null && beaconData.Mac != "")
+                {
+                    BleBeacon beacon = beacons.Find(n => n.MacAddress == beaconData.Mac);
+                    if (beacon == null)
+                    {
+                        beacon = new BleBeacon();
+                        beacon.MacAddress = beaconData.Mac;
+                        beacons.Add(beacon);
+
+                        using (BleBeaconServerContext db = new BleBeaconServerContext())
+                        {
+                            db.BleBeacons.Add(beacon);
+                            db.SaveChanges();
+                        }
+                    }
+                    else
+                    {
+                        beaconData.Beacon = beacon;
+                    }
+                }
+            }
+
+            if (type == Types.Ruuvitag)
+            {
+                RuuvitagParser parser = new RuuvitagParser(beaconData);
+                RuuvitagData ruuviData = parser.ReadData(packet.ByteData);
+
+                if (ruuviData != null)
+                {
+                    if (BeaconDataReceived != null)
+                        BeaconDataReceived(ruuviData);
+
+                    AddToNodeMap(node, ruuviData);
+                }
+            } else if(type == Types.APlant)
+            {
+                APlantParser parser = new APlantParser(beaconData);
+                APlantData aplantData = parser.ReadData(packet.ByteData);
+
+                if(aplantData != null)
+                {
+                    if (BeaconDataReceived != null)
+                        BeaconDataReceived(aplantData);
+
+                    AddToNodeMap(node, aplantData);
+                }
+            } else if(type == Types.PebbleBee)
+            {
+                PebblebeeParser parser = new PebblebeeParser(beaconData);
+                PebblebeeData pebbleData = parser.ReadData(packet.ByteData);
+
+                if(pebbleData != null)
+                {
+                    if (BeaconDataReceived != null)
+                        BeaconDataReceived(pebbleData);
+
+                    AddToNodeMap(node, pebbleData);
+                }
+            }
+
+            /*if(packet.mac_address != null && packet.mac_address != "")
             {
                 BleBeacon beacon = beacons.Find(n => n.MacAddress == packet.mac_address);
                 if(beacon == null)
@@ -394,11 +461,74 @@ namespace BleBeaconServer.DataClasses
                             nodeMap.Add(node, container);
                         }
                     }
-                }
-            }
+                }*/
+
+            //}
 
         }
-        
+
+        private void AddToNodeMap(BleNode node, object obj)
+        {
+            string mac = null;
+            double rssi = 0;
+            if (obj != null && obj is RuuvitagData)
+            {
+                RuuvitagData ruuviData = (RuuvitagData)obj;
+                mac = ruuviData.Mac;
+                rssi = ruuviData.Rssi;
+            }
+            //Dictionary<BleNode, RollingList<int>> nodeMap;
+            Dictionary<BleNode, FilterContainer> nodeMap;
+            if (mac != null && rssi != 0)
+            {
+                if (beaconMap.ContainsKey(mac))
+                {
+                    nodeMap = beaconMap[mac];
+                }
+                else
+                {
+                    //nodeMap = new Dictionary<BleNode, RollingList<int>>();
+                    lock (beaconMap)
+                    {
+                        nodeMap = new Dictionary<BleNode, FilterContainer>();
+                        beaconMap.Add(mac, nodeMap);
+                    }
+                }
+
+                if (nodeMap != null)
+                {
+                    if (nodeMap.ContainsKey(node))
+                    {
+                        lock (nodeMap[node])
+                        {
+                            //nodeMap[node].Add(packet.rssi);
+
+                            nodeMap[node].Filter.Update(new[] { (double)rssi });
+                            nodeMap[node].LastEstimate = nodeMap[node].Filter.getState()[0];
+                        }
+                    }
+                    else
+                    {
+                        //RollingList<int> list = new RollingList<int>(100);
+                        FilterContainer container = new FilterContainer();
+                        container.Filter = new UKF();
+                        //UKF filter = new UKF();
+                        //list.Add(packet.rssi);
+                        lock (container)
+                        {
+                            container.Filter.Update(new[] { (double)rssi });
+                            container.LastEstimate = container.Filter.getState()[0];
+                        }
+                        //nodeMap.Add(node, list);
+                        lock (nodeMap)
+                        {
+                            nodeMap.Add(node, container);
+                        }
+                    }
+                }
+            }
+        }
+
         public static Vector2 GetLocation(List<BleNode> nodes, List<double> distances)
         {
             if (nodes.Count == 3 && distances.Count == 3)

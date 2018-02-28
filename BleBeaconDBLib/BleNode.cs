@@ -15,7 +15,7 @@ namespace BleBeaconServer.DbEntities
         //[Column("tx_power")]
         //public int TxPower { get; set; }
         [Column("sender")]
-        public int Sender { get; set; }
+        public string Sender { get; set; }
         [Column("x")]
         public double X { get; set; }
         [Column("y")]

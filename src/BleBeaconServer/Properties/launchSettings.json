@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "BleBeaconServer": {
+      "commandName": "Project",
+      "commandLineArgs": "-d C:\\Users\\tapsa\\Documents\\ruuvitagGrafana -p 8473"
+    }
+  }
+}

@@ -75,12 +75,52 @@ namespace BleBeaconServer.DataClasses
                         {
                             string data = System.Text.Encoding.UTF8.GetString(result.Buffer);
 
+                            //byte[] data = (byte[])result.Buffer.Clone();
+
                             //Console.WriteLine(data);
 
-                            BeaconPacket packet = JsonConvert.DeserializeObject<BeaconPacket>(data);
-                            
-                            if(BeaconPacketReceived != null)
-                                BeaconPacketReceived(packet);
+                            if (result.Buffer.Length >= 2)
+                            {
+                                /*
+                                int index = 0;
+                                BeaconPacket packet = new BeaconPacket();
+                                packet.SenderLength = BitConverter.ToUInt16(result.Buffer, 0);
+                                index += 2;
+
+                                if(result.Buffer.Length < 2 + index)
+                                {
+                                    Console.WriteLine("[udplistener] Error at parsing packet: Buffer length too short!");
+                                }
+
+                                packet.Sender = System.Text.Encoding.UTF8.GetString(result.Buffer, index, packet.SenderLength);
+                                index += packet.SenderLength;
+                                if(packet.Sender == null || packet.Sender == "" || packet.Sender.Length != 17)
+                                {
+                                    Console.WriteLine("[udplistener] Error at parsing packet: Sender not valid!");
+                                    return;
+                                }
+
+                                packet.DataLength = BitConverter.ToUInt16(result.Buffer, index);
+                                index += 2;
+
+                                packet.Data = new byte[packet.DataLength];
+
+
+                                if(packet.Data.Length >= result.Buffer.Length - index)
+                                {
+                                    for(int i = 0; i < packet.DataLength; i++)
+                                    {
+                                        packet.Data[i] = result.Buffer[index++];
+                                    }
+                                }
+                                */
+                                    //result.Buffer. CopyTo(packet.Data, index);
+
+                                BeaconPacket packet = JsonConvert.DeserializeObject<BeaconPacket>(data);
+                                
+                                if (BeaconPacketReceived != null)
+                                    BeaconPacketReceived(packet);
+                            }
                         }
                     }
                 }

@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <None Remove="appsettings.fsol.json" />
+    <None Remove="appsettings.template.json" />
   </ItemGroup>
 
   <ItemGroup>
