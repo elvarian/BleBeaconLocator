@@ -1,0 +1,14 @@
+Apache-Commons-Math3-C--master/
+BleBeaconDBLib/bin/
+BleBeaconDBLib/obj/
+BleBeaconDBLib2/
+BleLocationUI/BleLocationUI/bin/
+BleLocationUI/BleLocationUI/obj/
+BleLocationUI/packages/
+LMA/
+packages/
+src/BleBeaconServer/bin/
+src/BleBeaconServer/Migrations/
+Trilateration/
+src/BleBeaconServer/obj/
+.vs/

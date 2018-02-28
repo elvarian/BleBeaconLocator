@@ -20,6 +20,12 @@ namespace BleBeaconServer
 
         static bool closing = false;
 
+        static string progVersion()
+        {
+            FileVersionInfo vfi = System.Diagnostics.FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            return vfi.ProductVersion.ToString();
+        }
+
         public static void Main(string[] args)
         {
             //using (BleBeaconServerContext db = new BleBeaconServerContext())
@@ -31,9 +37,12 @@ namespace BleBeaconServer
                 Console.WriteLine("Mac: " + beacon.MacAddress);
             } */
 
+            Console.WriteLine("Starting BleBeaconServer v" + progVersion());
+
             string filename = null;
             int port = 0;
             bool noConsole = false;
+            bool help = false;
 
             for(int i = 0; i < args.Length; i++)
             {
@@ -53,6 +62,8 @@ namespace BleBeaconServer
                     }
                     else if (args[i] == "--no-console")
                         noConsole = true;
+                    else if (args[i] == "--help")
+                        help = true;
                 }
             }
 
@@ -62,11 +73,27 @@ namespace BleBeaconServer
             }
             else if(filename != null)
             {
-                Console.WriteLine("Path '" + filename + "' doesn't exists!");
+                Console.WriteLine("Filepath '" + filename + "' doesn't exists!");
+                PrintUsageText();
                 return;
             } else
             {
                 Console.WriteLine("Please submit a filename");
+                PrintUsageText();
+                return;
+            }
+
+            if(port == 0)
+            {
+                Console.WriteLine("Cannot start without port information.");
+                PrintUsageText();
+                return;
+            }
+
+            if(help)
+            {
+                PrintUsageText();
+                return;
             }
             
             packetHandler = new BeaconPacketHandler();
@@ -78,6 +105,7 @@ namespace BleBeaconServer
             UdpListener.BeaconPacketReceived += UdpListener_BeaconPacketReceived;
 
             Console.CancelKeyPress += Console_CancelKeyPress;
+            
             while (!closing)
             {
                 
@@ -98,6 +126,16 @@ namespace BleBeaconServer
                 }
             }
             //}
+        }
+
+        private static void PrintUsageText()
+        {
+            Console.WriteLine("Usage information: ");
+            Console.WriteLine("Arguments:");
+            Console.WriteLine("-p port\tRequired");
+            Console.WriteLine("-f filename-path\tFor grafana, optional");
+            Console.WriteLine("--no-console\tRun without console printout");
+            Console.WriteLine("--help\tPrints this usage information");
         }
 
         private static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
