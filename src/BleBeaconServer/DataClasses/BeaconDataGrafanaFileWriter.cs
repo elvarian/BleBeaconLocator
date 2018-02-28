@@ -97,7 +97,7 @@ namespace BleBeaconServer.DataClasses
                 {
                     Trace.WriteLine("[beacondatagrafanafukewriter] Exception caugth: " + ex.Message);
                 }
-                for(int i = 0; i < 60; i++)
+                for(int i = 0; i < 15; i++)
                 {
                     if (!shouldStop)
                         Thread.Sleep(1000);
