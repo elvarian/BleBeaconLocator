@@ -147,6 +147,35 @@ namespace BleBeaconServer.DataClasses
 
                             double distance = CalculateDistance(txPower, rssiFiltered);
 
+                            using (BleBeaconServerContext db = new BleBeaconServerContext())
+                            {
+                                BleBeacon beacon = beacons.Find(b => b.MacAddress == mac);
+                                if (beacon != null)
+                                {
+                                    bool foundDistance = false;
+                                    foreach (BleDistance bleDistance in db.Distances)
+                                    {
+                                        if (bleDistance.BleBeaconsId == beacon.BleBeaconsId && bleDistance.BleNodesId == node.BleNodesId)
+                                        {
+                                            bleDistance.Distance = distance;
+                                            foundDistance = true;
+                                            break;
+                                        }
+                                    }
+
+                                    if (!foundDistance)
+                                    {
+                                        BleDistance bleDistance = new BleDistance();
+                                        bleDistance.BleBeaconsId = beacon.BleBeaconsId;
+                                        bleDistance.BleNodesId = node.BleNodesId;
+                                        bleDistance.Distance = distance;
+                                        db.Distances.Add(bleDistance);
+                                    }
+                                    
+                                    db.SaveChanges();
+                                }
+                            }
+
                             if (!distances.ContainsKey(mac))
                             {
                                 lock (distances)
@@ -236,6 +265,7 @@ namespace BleBeaconServer.DataClasses
                         {
                             location.BleBeaconsId = beacon.BleBeaconsId;
 
+                            /*
                             using (BleBeaconServerContext db = new BleBeaconServerContext())
                             {
                                 foreach (BleNode node in nodeList)
@@ -262,7 +292,7 @@ namespace BleBeaconServer.DataClasses
                                 }
 
                                 db.SaveChanges();
-                            }
+                            }*/
                             
                             using (BleBeaconServerContext db = new BleBeaconServerContext())
                             {
