@@ -18,6 +18,8 @@ namespace BleBeaconServer
         public static BeaconDataGrafanaFileWriter grafanaFileWriter;
         //public static BleBeaconServerContext db;
 
+        static System.Diagnostics.TextWriterTraceListener debugListener;
+
         static bool closing = false;
 
         static string progVersion()
@@ -43,6 +45,7 @@ namespace BleBeaconServer
             int port = 0;
             bool noConsole = false;
             bool help = false;
+            bool debug = false;
 
             for(int i = 0; i < args.Length; i++)
             {
@@ -62,6 +65,8 @@ namespace BleBeaconServer
                     }
                     else if (args[i] == "--no-console")
                         noConsole = true;
+                    else if (args[i] == "--debug")
+                        debug = true;
                     else if (args[i] == "--help")
                         help = true;
                 }
@@ -95,6 +100,13 @@ namespace BleBeaconServer
                 PrintUsageText();
                 return;
             }
+
+            if(debug)
+            {
+                debugListener = new TextWriterTraceListener(Console.Out);
+                debugListener.Filter = new SourceFilter("debug");
+                System.Diagnostics.Trace.Listeners.Add(debugListener);
+            }
             
             packetHandler = new BeaconPacketHandler();
 
@@ -105,7 +117,6 @@ namespace BleBeaconServer
             UdpListener.BeaconPacketReceived += UdpListener_BeaconPacketReceived;
 
             Console.CancelKeyPress += Console_CancelKeyPress;
-            
             while (!closing)
             {
                 
@@ -154,6 +165,8 @@ namespace BleBeaconServer
                 udpListener.RequestStop();
                 packetHandler.RequestStop();
                 grafanaFileWriter.RequestStop();
+                if (debugListener != null)
+                    debugListener.Close();
             }
         }
 
