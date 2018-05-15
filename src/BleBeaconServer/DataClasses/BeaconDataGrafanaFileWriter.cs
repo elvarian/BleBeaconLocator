@@ -66,22 +66,26 @@ namespace BleBeaconServer.DataClasses
                                 string name = data.Mac;
                                 if (data.Beacon != null && data.Beacon.Name != null && data.Beacon.Name != "")
                                     name = data.Beacon.Name;
+
+                                string node = data.Node.Sender;
+                                if (node == null || node == "")
+                                    node = "Unknown sender";
                                 
                                 if (data is RuuvitagData)
                                 {
                                     RuuvitagData ruuviData = (RuuvitagData)data;
 
                                     int pressure = (int)ruuviData.Pressure / 100;
-                                    file.WriteLine("tags{mac=\"" + ruuviData.Mac + "\",beaconname=\"" + name + "\",type=\"ruuvitag\",valuetype=\"temp\"} " + ruuviData.Temp.ToString("D"));
-                                    file.WriteLine("tags{mac=\"" + ruuviData.Mac + "\",beaconname=\"" + name + "\",type=\"ruuvitag\",valuetype=\"humidity\"} " + ruuviData.Humidity.ToString("0.00", CultureInfo.CreateSpecificCulture("en-US")));
-                                    file.WriteLine("tags{mac=\"" + ruuviData.Mac + "\",beaconname=\"" + name + "\",type=\"ruuvitag\",valuetype=\"pressure\"} " + pressure.ToString("D"));
+                                    file.WriteLine("tags{mac=\"" + ruuviData.Mac + "\",beaconname=\"" + name + "\",node=\"" + node + "\",type=\"ruuvitag\",valuetype=\"temp\"} " + ruuviData.Temp.ToString("D"));
+                                    file.WriteLine("tags{mac=\"" + ruuviData.Mac + "\",beaconname=\"" + name + "\",node=\"" + node + "\",type=\"ruuvitag\",valuetype=\"humidity\"} " + ruuviData.Humidity.ToString("0.00", CultureInfo.CreateSpecificCulture("en-US")));
+                                    file.WriteLine("tags{mac=\"" + ruuviData.Mac + "\",beaconname=\"" + name + "\",node=\"" + node + "\",type=\"ruuvitag\",valuetype=\"pressure\"} " + pressure.ToString("D"));
                                 }
                                 else if (data is APlantData)
                                 {
                                     APlantData aplantData = (APlantData)data;
 
-                                    file.WriteLine("tags{mac=\"" + data.Mac + "\",beaconname=\"" + name + "\",type=\"aplant\",valuetype=\"temp\"} " + aplantData.Temp.ToString("D"));
-                                    file.WriteLine("tags{mac=\"" + data.Mac + "\",beaconname=\"" + name + "\",type=\"aplant\",valuetype=\"soilmoisture\"} " + aplantData.SoilMoisture.ToString("D"));
+                                    file.WriteLine("tags{mac=\"" + data.Mac + "\",beaconname=\"" + name + "\",node=\"" + node + "\",type=\"aplant\",valuetype=\"temp\"} " + aplantData.Temp.ToString("D"));
+                                    file.WriteLine("tags{mac=\"" + data.Mac + "\",beaconname=\"" + name + "\",node=\"" + node + "\",type=\"aplant\",valuetype=\"soilmoisture\"} " + aplantData.SoilMoisture.ToString("D"));
                                 }
                             }
                         }
