@@ -67,9 +67,9 @@ namespace BleBeaconServer.DataClasses
                                 if (data.Beacon != null && data.Beacon.Name != null && data.Beacon.Name != "")
                                     name = data.Beacon.Name;
 
-                                string node = data.Node.Sender;
-                                if (node == null || node == "")
-                                    node = "Unknown sender";
+                                string node = "Unknown sender";
+                                if (data.Node != null && data.Node.Sender != null && data.Node.Sender != "")
+                                    node = data.Node.Sender;
                                 
                                 if (data is RuuvitagData)
                                 {
@@ -97,7 +97,7 @@ namespace BleBeaconServer.DataClasses
 
                 } catch(Exception ex)
                 {
-                    Trace.WriteLine("[beacondatagrafanafukewriter] Exception caugth: " + ex.Message);
+                    Trace.WriteLine("[beacondatagrafanafilewriter] Exception caugth: " + ex.Message);
                 }
                 for(int i = 0; i < 15; i++)
                 {
