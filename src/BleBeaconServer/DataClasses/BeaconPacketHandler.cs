@@ -371,6 +371,8 @@ namespace BleBeaconServer.DataClasses
             Types type = BeaconData.GetType(packet.ByteData);
             
             BeaconData beaconData = BeaconData.ParseValues(packet.ByteData);
+            if(node != null)
+                beaconData.Node = node;
 
             if (beaconData != null && type != Types.Unknown)
             {
@@ -392,7 +394,6 @@ namespace BleBeaconServer.DataClasses
                     else
                     {
                         beaconData.Beacon = beacon;
-                        beaconData.Node = node;
                     }
                 }
             }

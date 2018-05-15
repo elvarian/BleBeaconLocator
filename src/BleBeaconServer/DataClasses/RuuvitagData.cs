@@ -91,6 +91,7 @@ namespace BleBeaconServer.DataClasses
             this.Type = data.Type;
             this.Date = data.Date;
             this.Beacon = data.Beacon;
+            this.Node = data.Node;
         }
 
         /*
