@@ -371,11 +371,10 @@ namespace BleBeaconServer.DataClasses
             Types type = BeaconData.GetType(packet.ByteData);
             
             BeaconData beaconData = BeaconData.ParseValues(packet.ByteData);
-            if(node != null)
-                beaconData.Node = node;
-
             if (beaconData != null && type != Types.Unknown)
             {
+                if (node != null)
+                    beaconData.Node = node;
                 if (beaconData.Mac != null && beaconData.Mac != "")
                 {
                     BleBeacon beacon = beacons.Find(n => n.MacAddress == beaconData.Mac);
