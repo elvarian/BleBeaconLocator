@@ -91,8 +91,10 @@ namespace BleBeaconServer.DataClasses
                         }
                     }
 
-                    Trace.WriteLine("[beacondatagrafanafilewriter] Copying grafana file from temp file to actual file");
-
+                    lock (beaconDatas)
+                    {
+                        Trace.WriteLine("[beacondatagrafanafilewriter] Copying grafana file from temp file to actual file. BeaconDatas count: " + beaconDatas.Count);
+                    }
                     File.Copy(tempFile, filename, true);
                     File.Delete(tempFile);
 
